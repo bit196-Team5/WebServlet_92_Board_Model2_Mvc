@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>    
 
+<% pageContext.setAttribute("newLineChar", "\n"); %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +16,6 @@
 <body>
 	<c:import url="/include/header.jsp" />
 
-	<% pageContext.setAttribute("newLineChar", "\n"); %>
 	<c:set var="idx" value="${requestScope.idx}"></c:set>
 	<c:set var="board" value="${requestScope.board}"></c:set>
 	<c:set var="cpage" value="${requestScope.cpage}"></c:set>
@@ -111,20 +111,20 @@
 				</script>
 				<br>
 				<!-- 꼬리글 목록 테이블 -->
-				<c:if test="${replyList != null && replyList.size() > 0}">
+				<c:if test="${replylist != null && replylist.size() > 0}">
 					<table width="80%" border="1">
 						<tr>
 							<th colspan="2">REPLY LIST</th>
 						</tr>
-						<c:forEach var="reply" items="${replyList}">
+						<c:forEach var="reply" items="${replylist}">
 							<tr align="left">
 								<td width="80%">[${reply.writer }] : ${reply.content } <br>
-									작성일: ${reply.writedate.toString() } <%-- <%=reply.getWritedate().toString()%> --%>
+									작성일: ${reply.writedate.toString()} <%-- <%=reply.getWritedate().toString()%> --%>
 								</td>
 								<td width="20%">
 									<form action="replydelete.board" method="POST" name="replyDel">
-										<input type="hidden" name="no" value="${reply.no }"> <input
-											type="hidden" name="idx" value="${idx }"> password :<input
+										<input type="hidden" name="no" value="${reply.no}"> <input
+											type="hidden" name="idx" value="${idx}"> password :<input
 											type="password" name="delPwd" size="4"> <input
 											type="button" value="삭제" onclick="reply_del(this.form)">
 									</form>

@@ -16,6 +16,8 @@ public class BoardReplyDeleteService implements Action {
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
 		
+		response.setContentType("text/html; charset=UTF-8");
+		
 		String idx_fk=request.getParameter("idx");//댓글의 원본 게시글 번호
 		String no = request.getParameter("no");//댓글의 순번(PK)
 		String pwd = request.getParameter("delPwd");//댓글의 암호

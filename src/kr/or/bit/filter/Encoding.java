@@ -35,17 +35,15 @@ public class Encoding implements Filter {
 	
 	    //request 요청오면 실행 코드
 		 if(request.getCharacterEncoding() == null) {
-			 System.out.println("before : " + request.getCharacterEncoding());
+			 //System.out.println("before : " + request.getCharacterEncoding());
 			 //한줄 코드 (공통관심 , 보조관심)
 			 request.setCharacterEncoding(this.encoding);
-			 //
-			 System.out.println("after : " + request.getCharacterEncoding());
+			 //System.out.println("after : " + request.getCharacterEncoding());
 		 }
 		//
 		chain.doFilter(request, response);
 	   //response 응답 처리 실행 코드
-		     System.out.println("응답 처리 실행");
-	   //	
+		     //System.out.println("응답 처리 실행");
 	}
 
 	
