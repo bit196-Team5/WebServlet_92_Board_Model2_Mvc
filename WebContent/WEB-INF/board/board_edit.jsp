@@ -49,7 +49,7 @@
 	</script>
 </head>
 <body>
-	<c:import url="/include/header.jsp" />
+	<c:import url="/WEB-INF/include/header.jsp" />
 	
 	<c:set var="idx" value="${requestScope.idx}"></c:set>
 	<c:set var="board" value="${requestScope.board}"></c:set>

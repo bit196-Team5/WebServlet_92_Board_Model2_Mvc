@@ -25,7 +25,7 @@ import kr.or.bit.service.BoardWriteService;
 
 
 
-@WebServlet("*.board")
+@WebServlet("*.board") //*.html, *.jsp, *. 사용금지
 public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -97,7 +97,7 @@ public class FrontController extends HttpServlet {
     		action = new BoardReplyDeleteService();
     		forward = action.execute(request, response);
     		System.out.println("BoardReplyDeleteService 실행");
-    	
+    		    		
     	//답글
     	}else if(url_command.equals("/rewrite.board")) {
     		action = new BoardRewriteViewService();

@@ -56,14 +56,14 @@ public class BoardContentService implements Action {
 			
 			//데이터 조회 (1건 (row))
 			Board board = dao.getContent(Integer.parseInt(idx));
+			System.out.println(board);
 			
 			request.setAttribute("cpage", cpage);
 			request.setAttribute("pagesize", pagesize);
 			request.setAttribute("idx", idx);
 			request.setAttribute("board", board);
 			
-			//댓글 목록
-			List<Reply> replylist = dao.replylist(idx); //참조하는 글번호
+			List<Reply> replylist = dao.replylist(idx);
 			
 			request.setAttribute("replylist", replylist);
 			

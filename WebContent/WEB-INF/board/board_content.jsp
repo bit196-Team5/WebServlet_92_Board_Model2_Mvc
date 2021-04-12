@@ -9,18 +9,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>board : content</title>
-<link rel="Stylesheet"
-	href="${pageContext.request.contextPath}/style/default.css" />
+	<title>board : content</title>
+	<link rel="Stylesheet" href="${pageContext.request.contextPath}/style/default.css" />
+	<!-- js -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-	<c:import url="/include/header.jsp" />
+	<c:import url="/WEB-INF/include/header.jsp" />
 
 	<c:set var="idx" value="${requestScope.idx}"></c:set>
 	<c:set var="board" value="${requestScope.board}"></c:set>
 	<c:set var="cpage" value="${requestScope.cpage}"></c:set>
 	<c:set var="pagesize" value="${requestScope.pagesize}"></c:set>
-	<c:set var="replylist" value="${requestScope.replylist}"></c:set>
 
 	<div id="pageContainer">
 		<div style="padding-top: 30px; text-align: center; margin: 0 auto;">
@@ -42,8 +42,30 @@
 					<tr>
 						<td width="20%" align="center"><b>홈페이지</b></td>
 						<td>${board.homepage}</td>
+						<!-- 첨부파일 <file> -->
 						<td width="20%" align="center"><b>첨부파일</b></td>
-						<td>${board.filename}</td>
+						<td>
+						<c:set var="originalfilename" value="${board.filename}" />
+						<c:set var="lowerfilename" value="${fn:toLowerCase(originalfilename)}" />
+						<c:forTokens var="filename" items="${lowerfilename}" delims="." varStatus="status">
+							<c:if test="${status.last}">
+							<c:choose>
+							<c:when test="${empty board.filename || board.filename eq 'null'}">
+								첨부파일이 없습니다
+							</c:when>
+							<c:when test="${filename eq 'jpg' || filename eq 'png' || filename eq 'gif'}">
+								<img id="preview"
+									src="upload/${originalfilename}" width="300"
+									alt="로컬에 있는 이미지가 보여지는 영역">
+							</c:when>
+							<c:otherwise>
+								${originalfilename}
+							</c:otherwise>
+							</c:choose>
+							</c:if>
+							</c:forTokens>
+						</td>
+						<!-- 첨부파일 <file> -->
 					</tr>
 					<tr>
 						<td width="20%" align="center"><b>제목</b></td>
@@ -64,10 +86,10 @@
 					</tr>
 				</table>
 				<!--  꼬리글 달기 테이블 -->
-				<form name="reply" action="replyok.board" method="POST">
+				<form name="reply" method="POST">
 					<!-- hidden 태그  값을 숨겨서 처리  -->
-					<input type="hidden" name="idx" value="${idx}"> <input
-						type="hidden" name="userid" value="">
+					<input type="hidden" name="idx" value="${idx}" id="idx"> 
+					<input type="hidden" name="userid" value="">
 					<!-- 추후 필요에 따라  -->
 					<!-- hidden data -->
 					<table width="80%" border="1">
@@ -76,66 +98,136 @@
 						</tr>
 						<tr>
 							<td align="left">작성자 : <input type="text"
-								name="reply_writer"><br /> 내&nbsp;&nbsp;용 : <textarea
-									name="reply_content" rows="2" cols="50"></textarea>
+								name="reply_writer" id="reply_writer"><br /> 내&nbsp;&nbsp;용 : <textarea
+									name="reply_content" rows="2" cols="50" id="reply_content"></textarea>
 							</td>
 							<td align="left">비밀번호: <input type="password"
-								name="reply_pwd" size="4"> <input type="button"
-								value="등록" onclick="reply_check()">
+								name="reply_pwd" size="4" id="password"> <input type="button"
+								value="등록" id="replybtn">
 							</td>
 						</tr>
 					</table>
 				</form>
 				<!-- 유효성 체크	 -->
-				<script type="text/javascript">
-					function reply_check() {
-						var frm = document.reply;
-						if (frm.reply_writer.value == "" || frm.reply_content.value == ""
-							|| frm.reply_pwd.value == "") {
-									alert("리플 내용, 작성자, 비밀번호를 모두 입력해야합니다.");
-							return false;
-						}
-					frm.submit();
-					}
-					function reply_del(frm) {
-						//alert("del");
-						//var frm = document.replyDel;
-						//alert(frm);
-						if (frm.delPwd.value == "") {
-							alert("비밀번호를 입력하세요");
-							frm.delPwd.focus();
-							return false;
-						}
-						frm.submit();
-					}
-				</script>
 				<br>
 				<!-- 꼬리글 목록 테이블 -->
-				<c:if test="${replylist != null && replylist.size() > 0}">
 					<table width="80%" border="1">
+						<thead>
 						<tr>
 							<th colspan="2">REPLY LIST</th>
 						</tr>
-						<c:forEach var="reply" items="${replylist}">
+						<thead>
+						<tbody id="tbody">
 							<tr align="left">
-								<td width="80%">[${reply.writer }] : ${reply.content } <br>
-									작성일: ${reply.writedate.toString()} <%-- <%=reply.getWritedate().toString()%> --%>
-								</td>
-								<td width="20%">
-									<form action="replydelete.board" method="POST" name="replyDel">
-										<input type="hidden" name="no" value="${reply.no}"> <input
-											type="hidden" name="idx" value="${idx}"> password :<input
-											type="password" name="delPwd" size="4"> <input
-											type="button" value="삭제" onclick="reply_del(this.form)">
-									</form>
-								</td>
+								<td>등록된 댓글이 없습니다</td>
 							</tr>
-						</c:forEach>
+						</tbody>
 					</table>
-				</c:if>
 			</center>
 		</div>
 	</div>
 </body>
+<script type="text/javascript">
+
+
+	$(function() {
+		replyList();
+		replyAdd();
+	});
+	
+	function replyList(){	
+		$.ajax({
+			url : "Replylist",
+			type : 'GET',
+	        dataType : "json",
+			data : {
+				idx : $('#idx').val()
+			},
+			success : function(data) {
+				
+				$('#tbody').empty();
+				if(data.length == 0){
+					$('#tbody').append('<tr align="left"><td>등록된 댓글이 없습니다</td></tr>');
+				
+				}else {
+					$.each(data, function(index,obj) {
+						$('#tbody').append('<tr align="left"><td width="80%">[' 
+								+obj.writer +'] : ' +obj.content 
+								+'<br> 작성일 :'+obj.writedate +'</td><td width="20%">'
+								+'<form method="POST" name="replyDel">'
+								+'<input type="hidden" name="no" value="' +obj.no +'" class="reply_no">'
+								+'<input type="hidden" name="idx" value="' +obj.idx_fk +'" class="reply_idx">'
+								+'password : <input type="password" name="delPwd" size="4" class="reply_pwd">'
+								+' <input type="button" value="삭제" onclick="reply_del(this.form)">'
+								+'</form></td></tr>');
+					});		
+				}
+			},
+			error : function() {
+				alert('댓글 로드 실패');
+			}
+		});
+		
+	}
+	
+	function replyAdd(){
+		$('#replybtn').click(function() {
+			
+			var frm = document.reply;
+			if (frm.reply_writer.value == "" || frm.reply_content.value == ""
+				|| frm.reply_pwd.value == "") {
+						alert("리플 내용, 작성자, 비밀번호를 모두 입력해야합니다.");
+				return false;
+			}
+			
+			$.ajax({
+				url : "ReplyAdd",
+				type : 'POST',
+				data : {
+					"reply_writer" : $('#reply_writer').val(),
+					"reply_content" : $('#reply_content').val(),
+					"reply_pwd" : $('#password').val(),
+					"idx" : $('#idx').val()
+				},
+				success : function(data) {
+					replyList();
+					$('#reply_writer').val("");
+					$('#reply_content').val("");
+					$('#password').val("");
+
+				},
+				error : function() {
+					alert('댓글 등록 실패');
+				}
+			});
+		});
+	}
+	
+	function reply_del(frm) {
+
+		//console.log(frm);
+		if (frm.delPwd.value == "") {
+			alert("비밀번호를 입력하세요");
+			frm.delPwd.focus();
+			return false;
+		}
+			
+		$.ajax({
+			url :"Replydelete",
+			datatype : "text",
+			data :{
+				"pwd" : frm.delPwd.value,
+				"no" : frm.no.value,
+				"idx_fk" : frm.idx.value
+			},
+			success : function(data){
+				replyList();
+			},
+			error : function() {
+				alert('댓글 삭제 실패');
+			}
+		});
+	}
+</script>
 </html>
 

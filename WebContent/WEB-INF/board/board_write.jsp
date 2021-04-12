@@ -38,14 +38,37 @@
 		 
 		}
 	</script>
+	<!-- 첨부파일 <file> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#filename').on("change", fileChange);
+			
+		})
+		
+		function fileChange(e){
+			var files = e.target.files;
+			var filesArr = Array.prototype.slice.call(files);
+			
+			filesArr.forEach(function(f){
+				var reader = new FileReader();
+				reader.onload = function(e){
+					$('#preview').attr("src", e.target.result);
+				}
+				reader.readAsDataURL(f);
+			})
+		}
+		
+	</script>
+<!-- 첨부파일 <file> -->
 </head>
 <body>
-	<c:import url="/include/header.jsp" />
+	<c:import url="/WEB-INF/include/header.jsp" />
 
     <div id="pageContainer">
         <div style="padding-top: 25px; text-align: center">
             <!-- form 시작 ---------->
-            <form name="bbs" action="writeok.board" method="POST">
+            <form name="bbs" action="writeok.board" method="POST" enctype="multipart/form-data">
                 <table width="95%" border="2" align="center">
                     <tr>
                         <td width="20%" align="center">제목</td>
@@ -71,10 +94,16 @@
                         <td width="20%" align="center">비밀번호</td>
                         <td width="80%" align="left"><input type="password" name="pwd" size="20"></td>
                     </tr>
+					<!-- 첨부파일 <file> 파일 id값 설정 -->
                     <tr>
-                        <td width="20%" align="center">첨부파일</td>
-                        <td width="80%" align="left"><input type="file" name="filename"></td>
+                    	<td width="20%" align="center">첨부파일</td>
+                        <td width="80%" align="left"><input type="file" id = "filename" name="filename"></td>
                     </tr>
+                    <tr>
+                    	<td width="20%" align="center">미리보기</td>
+                        <td width="80%" align="left"><img id="preview" src="" width="300" alt=""></td>
+                    </tr>
+                    <!-- 첨부파일 <file> 미리보기 tr 추가-->
                     <tr>
                         <td colspan="2" align="center">
                             <input type="button" value="글쓰기" onclick="check();" /> 

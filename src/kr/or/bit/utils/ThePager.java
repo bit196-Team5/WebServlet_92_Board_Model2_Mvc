@@ -10,8 +10,7 @@ public class ThePager {
 	 
 	 private String linkUrl;//페이저가 포함되는 페이지의 주소
 	 
-	 public ThePager(int dataCount, int currentPage, 
-	  int pageSize, int pagerSize, String linkUrl) {
+	 public ThePager(int dataCount, int currentPage, int pageSize, int pagerSize, String linkUrl) {
 	  
 	  this.linkUrl = linkUrl;
 	  

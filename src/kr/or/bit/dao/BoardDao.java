@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -447,10 +449,12 @@ public class BoardDao {
 				pstmt = conn.prepareStatement(reply_sql);
 				pstmt.setString(1, idx_fk);
 				
-				rs =pstmt.executeQuery();
+				rs = pstmt.executeQuery();
 				
 				list = new ArrayList<>();
+				
 				while(rs.next()) {
+					
 					int no = Integer.parseInt(rs.getString("no"));
 					String writer = rs.getString("writer");
 					String userid = rs.getString("userid");

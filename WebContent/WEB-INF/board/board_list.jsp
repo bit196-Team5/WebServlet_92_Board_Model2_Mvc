@@ -19,7 +19,7 @@
 	<c:set var="totalboardcount" value="${requestScope.totalboardcount}"></c:set>
 	<c:set var="pager" value="${requestScope.pager}"></c:set>
 	
-	<c:import url="/include/header.jsp" />
+	<c:import url="/WEB-INF/include/header.jsp" />
 	게시판 목록
 	<br>
 
@@ -126,12 +126,11 @@
 							<a href="list.board?cp=${cpage+1}&ps=${pagesize}">다음</a>
 						</c:if>
 					</td>
-					<td colspan="2" align="center">총 게시물 수 : ${totalboardcount }
+					<td colspan="2" align="center">총 게시물 수 : ${totalboardcount}
 					</td>
 				</tr>
 				<tr>
 					<td colspan="5" align="center">
-					
 					${pager}
 					</td>
 			</table>

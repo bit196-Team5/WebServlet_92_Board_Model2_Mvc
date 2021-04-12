@@ -46,7 +46,4 @@ public class Encoding implements Filter {
 		     //System.out.println("응답 처리 실행");
 	}
 
-	
-	
-
 }
