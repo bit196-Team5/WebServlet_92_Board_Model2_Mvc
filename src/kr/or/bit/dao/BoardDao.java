@@ -632,16 +632,16 @@ public class BoardDao {
 	}
 	
 	//게시글 수정하기 처리
-	//public int boardEdit(Board boarddata){}
-	public int boardEdit(HttpServletRequest boarddata) {
-		String idx= boarddata.getParameter("idx");
-		String pwd= boarddata.getParameter("pwd");
-		String writer= boarddata.getParameter("writer");
-		String email= boarddata.getParameter("email");
-		String homepage= boarddata.getParameter("homepage");
-		String subject= boarddata.getParameter("subject");
-		String content= boarddata.getParameter("content");
-		String filename= boarddata.getParameter("filename");
+	public int boardEdit(Board boarddata){
+	//public int boardEdit(HttpServletRequest boarddata) {
+//		String idx= boarddata.getParameter("idx");
+//		String pwd= boarddata.getParameter("pwd");
+//		String writer= boarddata.getParameter("writer");
+//		String email= boarddata.getParameter("email");
+//		String homepage= boarddata.getParameter("homepage");
+//		String subject= boarddata.getParameter("subject");
+//		String content= boarddata.getParameter("content");
+//		String filename= boarddata.getParameter("filename");
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -649,12 +649,21 @@ public class BoardDao {
 		int row = 0;
 		
 		try {
+			int idx = boarddata.getIdx();
+			String pwd = boarddata.getPwd();
+			String writer = boarddata.getWriter();
+			String email = boarddata.getEmail();
+			String homepage = boarddata.getHomepage();
+			String subject = boarddata.getSubject();
+			String content = boarddata.getContent();
+			String filename = boarddata.getFilename();
+			
 			conn = ds.getConnection();
 			String sql_idx = "select idx  from jspboard where idx=? and pwd=?";
 			String sql_udpate = "update jspboard set writer=? , email=? , homepage=? ,"+
 			                    " subject=? , content=? , filename=? where idx=?";
 			pstmt = conn.prepareStatement(sql_idx);
-			pstmt.setString(1, idx);
+			pstmt.setInt(1, idx);
 			pstmt.setString(2, pwd);
 			
 			rs = pstmt.executeQuery();
@@ -670,7 +679,7 @@ public class BoardDao {
 				pstmt.setString(4, subject);
 				pstmt.setString(5, content);
 				pstmt.setString(6, filename);
-				pstmt.setString(7, idx);
+				pstmt.setInt(7, idx);
 				row = pstmt.executeUpdate();
 				//System.out.println("row : " + row);
 			}

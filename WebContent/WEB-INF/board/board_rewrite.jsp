@@ -39,6 +39,27 @@
 
 	}
 </SCRIPT>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#filename').on("change", fileChange);
+			
+		})
+		
+		function fileChange(e){
+			var files = e.target.files;
+			var filesArr = Array.prototype.slice.call(files);
+			
+			filesArr.forEach(function(f){
+				var reader = new FileReader();
+				reader.onload = function(e){
+					$('#preview').attr("src", e.target.result);
+				}
+				reader.readAsDataURL(f);
+			})
+		}
+		
+	</script>
 </head>
 <body>
 	<c:import url="/WEB-INF/include/header.jsp" />
@@ -50,7 +71,7 @@
 	
 	<div id="pageContainer">
 		<div style="padding-top: 25px; text-align: center">
-			<form name="bbs" action="rewriteok.board" method="POST">
+			<form name="bbs" action="rewriteok.board" method="POST" enctype="multipart/form-data">
 			
 				<input type="hidden" name="cp" value="${cpage}" /> 
 				<input type="hidden" name="ps" value="${pagesize}" /> 
@@ -95,8 +116,12 @@
 					<tr>
 						<td width="20%" align="center">첨부파일</td>
 						<td width="80%" align="left">
-							<input type="file" name="filename"></td>
+							<input type="file" name="filename" id="filename"></td>
 					</tr>
+					<tr>
+                    	<td width="20%" align="center">미리보기</td>
+                        <td width="80%" align="left"><img id="preview" src="" width="300" alt=""></td>
+                    </tr>
 					<tr>
 						<td colspan="2" align="center">
 						<input type="button" 	value="글쓰기" onclick="boardcheck();" /> 

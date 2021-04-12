@@ -1,8 +1,12 @@
 package kr.or.bit.service;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.Parser;
 
 import kr.or.bit.action.Action;
@@ -15,19 +19,43 @@ public class BoardRewriteService implements Action {
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
 
-		String idx = request.getParameter("idx");
-		
-		String writer = request.getParameter("writer");
-		String subject = request.getParameter("subject");
-		String content = request.getParameter("content");
-		String email = request.getParameter("email");
-		String homepage = request.getParameter("homepage");
-		String filename = request.getParameter("filename");
-		String pwd = request.getParameter("pwd"); 
+		//첨부파일 <file>
+		String uploadpath = request.getSession().getServletContext().getRealPath("upload");
+		int size = 1024*1024*10; //10M 네이버 계산기
 		
 		ActionForward forward = null;
 		
 		try {
+			
+			MultipartRequest multi = new MultipartRequest(
+					request, //기존에 있는  request 객체의 주소값 
+					uploadpath, //실 저장 경로 (배포경로)
+					size, //10M
+					"UTF-8",
+					new DefaultFileRenamePolicy() //파일 중복(upload 폴더 안에:a.jpg -> a_1.jpg(업로드 파일 변경) )
+					);
+			
+			String idx = multi.getParameter("idx");
+			
+			String writer = multi.getParameter("writer");
+			String subject = multi.getParameter("subject");
+			String content = multi.getParameter("content");
+			String email = multi.getParameter("email");
+			String homepage = multi.getParameter("homepage");
+			//String filename = multi.getParameter("filename");
+			String pwd = multi.getParameter("pwd"); 
+			
+			//첨부파일 <file>
+			Enumeration filenames = multi.getFileNames();
+			String file = (String)filenames.nextElement();
+			String filename = multi.getFilesystemName(file);
+			
+			System.out.println(writer+pwd+subject+content+email+homepage+filename);
+			
+			if(filename == null) {
+				filename = "";
+			}
+			
 			Board board = new Board();
 			
 			board.setIdx(Integer.parseInt(idx));

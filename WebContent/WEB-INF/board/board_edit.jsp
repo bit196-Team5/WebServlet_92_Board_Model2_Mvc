@@ -47,6 +47,27 @@
 	
 		}
 	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#filename').on("change", fileChange);
+			
+		});
+		
+		function fileChange(e){
+			var files = e.target.files;
+			var filesArr = Array.prototype.slice.call(files);
+			
+			filesArr.forEach(function(f){
+				var reader = new FileReader();
+				reader.onload = function(e){
+					$('#preview').attr("src", e.target.result);
+				}
+				reader.readAsDataURL(f);
+			});
+		}
+		
+	</script>
 </head>
 <body>
 	<c:import url="/WEB-INF/include/header.jsp" />
@@ -55,9 +76,9 @@
 	<c:set var="board" value="${requestScope.board}"></c:set>
 	
 	<div id="pageContainer">
-		<div style="padding-top: 25px; text-align: center">
+		<div style="padding-top: 25px; text-align: center" >
 			<!-- form 시작 -->
-			<form name="edit" action="editok.board" method="POST">
+			<form name="edit" action="editok.board" method="POST" enctype="multipart/form-data">
 				<center>
 					<table width="90%" border="1">
 						<tr>
@@ -107,9 +128,13 @@
 						<tr>
 							<td width="20%" align="center"><b>첨부파일</b></td>
 							<td colspan="3">${board.filename} (${board.filesize}bytes)<br /> 
-								<input type="file" name="filename">
+								<input type="file" name="filename" id="filename" >
 							</td>
 						</tr>
+						<tr>
+                    		<td width="20%" align="center">미리보기</td>
+                        	<td width="80%" align="left"><img id="preview" src="upload/${board.filename}" width="300" alt=""></td>
+                   		</tr>
 						<tr>
 							<td colspan="4" align="center">
 								<input type="button" value="수정하기" onclick="editCheck();"> 

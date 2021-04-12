@@ -97,7 +97,7 @@
 					<!-- 첨부파일 <file> 파일 id값 설정 -->
                     <tr>
                     	<td width="20%" align="center">첨부파일</td>
-                        <td width="80%" align="left"><input type="file" id = "filename" name="filename"></td>
+                        <td width="80%" align="left"><input type="file" id="filename" name="filename"></td>
                     </tr>
                     <tr>
                     	<td width="20%" align="center">미리보기</td>
