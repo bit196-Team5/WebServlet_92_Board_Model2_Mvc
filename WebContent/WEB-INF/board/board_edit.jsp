@@ -48,10 +48,25 @@
 		}
 	</script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	<!-- summbernote -->
+	<!-- include libraries(jQuery, bootstrap) -->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<!-- include summernote css/js -->
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+	
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#filename').on("change", fileChange);
-			
+			$('#summernote').summernote({
+				placeholder: '내용을 입력하세요',
+				tabsize: 2,
+				height: 300,
+				minHeight: 300, 
+				maxHeight: 300, 
+			});	
 		});
 		
 		function fileChange(e){
@@ -119,7 +134,7 @@
 						<tr height="100">
 							<td width="20%" align="center"><b>글내용</b></td>
 							<td colspan="3">
-								<textarea rows="7" cols="50" name="content">
+								<textarea rows="7" cols="50" name="content" id="summernote">
 									${board.content}
 								</textarea>
 							</td>
@@ -128,7 +143,7 @@
 						<tr>
 							<td width="20%" align="center"><b>첨부파일</b></td>
 							<td colspan="3">${board.filename} (${board.filesize}bytes)<br /> 
-								<input type="file" name="filename" id="filename" >
+								<input type="file" name="filename" id="filename">
 							</td>
 						</tr>
 						<tr>

@@ -47,19 +47,18 @@
 						<td>
 						<c:set var="originalfilename" value="${board.filename}" />
 						<c:set var="lowerfilename" value="${fn:toLowerCase(originalfilename)}" />
-						<c:forTokens var="filename" items="${lowerfilename}" delims="." varStatus="status">
+						<c:forTokens var="file" items="${lowerfilename}" delims="." varStatus="status">
 							<c:if test="${status.last}">
 							<c:choose>
 							<c:when test="${empty board.filename || board.filename eq 'null'}">
 								첨부파일이 없습니다
 							</c:when>
-							<c:when test="${filename eq 'jpg' || filename eq 'png' || filename eq 'gif'}">
-								<img id="preview"
-									src="upload/${originalfilename}" width="300"
-									alt="로컬에 있는 이미지가 보여지는 영역">
+							<c:when test="${file eq 'jpg' || file eq 'png' || file eq 'gif'}">
+								<a href="upload/${originalfilename}" target="_blank">미리보기</a>
+								<a href="filedownload.board?file_name=${originalfilename}" id="download">다운로드</a>
 							</c:when>
 							<c:otherwise>
-								${originalfilename}
+								<a href="filedownload.board?file_name=${originalfilename}" id="download">${originalfilename}</a>
 							</c:otherwise>
 							</c:choose>
 							</c:if>
@@ -76,12 +75,11 @@
 						<td colspan="3">${fn:replace(board.content, newLineChar,"<br>")}</td>
 					</tr>
 					<tr>
-						<td colspan="4" align="center"><a
-							href="list.board?cp=${cpage}&ps=${pagesize}">목록가기</a> |<a
-							href="edit.board?idx=${idx}&cp=${cpage}&ps=${pagesize}">편집</a> |<a
-							href="delete.board?idx=${idx}&cp=${cpage}&ps=${pagesize}">삭제</a>
-							|<a
-							href="rewrite.board?idx=${idx}&cp=${cpage}&ps=${pagesize}&subject=${board.subject}">답글</a>
+						<td colspan="4" align="center">
+						<a href="list.board?cp=${cpage}&ps=${pagesize}">목록가기</a> |
+						<a href="edit.board?idx=${idx}&cp=${cpage}&ps=${pagesize}">편집</a> |
+						<a href="delete.board?idx=${idx}&cp=${cpage}&ps=${pagesize}">삭제</a> |
+						<a href="rewrite.board?idx=${idx}&cp=${cpage}&ps=${pagesize}&subject=${board.subject}">답글</a>
 						</td>
 					</tr>
 				</table>
@@ -133,6 +131,7 @@
 	$(function() {
 		replyList();
 		replyAdd();
+		filedownload();
 	});
 	
 	function replyList(){	
@@ -214,6 +213,7 @@
 			
 		$.ajax({
 			url :"Replydelete",
+			type : 'POST',
 			datatype : "text",
 			data :{
 				"pwd" : frm.delPwd.value,
@@ -228,6 +228,32 @@
 			}
 		});
 	}
+	/*
+	function filedownload(){
+		$('#download').click(function() {
+			let originalfilename = '<c:out value="${board.filename}" />'
+			//console.log(originalfilename);
+			let splitfilename = originalfilename.split('.');
+			//console.log(splitfilename[0]);
+			let filename = splitfilename[0];
+			//console.log(filename);
+			
+			$.ajax({
+				url : "filedownload",
+				type : 'POST',
+				data : {
+					"file_name" : originalfilename
+				},
+				success : function(data) {
+					alert('파일 다운 완료');
+				},
+				error : function() {
+					alert('파일 다운로드 실패');
+				}
+			});
+		});
+	}
+	*/
 </script>
 </html>
 

@@ -40,10 +40,25 @@
 	</script>
 	<!-- 첨부파일 <file> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	<!-- summbernote -->
+	<!-- include libraries(jQuery, bootstrap) -->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<!-- include summernote css/js -->
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+	
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#filename').on("change", fileChange);
-			
+			$('#summernote').summernote({
+				placeholder: '내용을 입력하세요',
+				tabsize: 2,
+				height: 300,
+				minHeight: 300, 
+				maxHeight: 300, 
+			});			
 		})
 		
 		function fileChange(e){
@@ -88,7 +103,9 @@
                     </tr>
                     <tr>
                         <td width="20%" align="center">글내용</td>
-                        <td width="80%" align="left"><textarea rows="10" cols="60" name="content" class="ckeditor"></textarea></td>
+                        <td width="80%" align="left">
+                        	<textarea rows="10" cols="60" name="content" class="ckeditor" id="summernote"></textarea>
+                        </td>
                     </tr>
                     <tr>
                         <td width="20%" align="center">비밀번호</td>
