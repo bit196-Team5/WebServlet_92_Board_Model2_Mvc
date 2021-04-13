@@ -131,7 +131,6 @@
 	$(function() {
 		replyList();
 		replyAdd();
-		filedownload();
 	});
 	
 	function replyList(){	
