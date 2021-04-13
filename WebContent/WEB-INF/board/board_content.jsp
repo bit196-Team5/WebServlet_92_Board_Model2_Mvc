@@ -228,32 +228,7 @@
 			}
 		});
 	}
-	/*
-	function filedownload(){
-		$('#download').click(function() {
-			let originalfilename = '<c:out value="${board.filename}" />'
-			//console.log(originalfilename);
-			let splitfilename = originalfilename.split('.');
-			//console.log(splitfilename[0]);
-			let filename = splitfilename[0];
-			//console.log(filename);
-			
-			$.ajax({
-				url : "filedownload",
-				type : 'POST',
-				data : {
-					"file_name" : originalfilename
-				},
-				success : function(data) {
-					alert('파일 다운 완료');
-				},
-				error : function() {
-					alert('파일 다운로드 실패');
-				}
-			});
-		});
-	}
-	*/
+
 </script>
 </html>
 
